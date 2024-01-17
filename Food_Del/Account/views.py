@@ -21,15 +21,24 @@ def register(request):
 			else:
 				if Username[0].isalpha():
 					if len(email)>6:
-						pass
+						if ("@" in email) and (email.count("@")==1):
+							if (email[-4]==".") ^ (email[-3]=="."):
+								user=User.objects.create_user(username=Username,first_name=first_name,last_name=last_name,password=PASSWORD,email=email)
+								user.save();
+								print("user created")
+								return redirect('login')
+							else:
+								messages.info(request,"Email should be belongs domain like .com .org")
+								return redirect('/')
+
+						else:
+							messages.info(request,"Email should contain '@' Symbol")
+							return redirect('/')
 					else:
-						messages.info(request,"Invalid Email entered")
+						messages.info(request,"Incorrect Email")
 						return redirect('/')
 
-					user=User.objects.create_user(username=Username,first_name=first_name,last_name=last_name,password=PASSWORD,email=email)
-					user.save();
-					print("user created")
-					return redirect('login')
+					
 				else:
 					messages.info(request,"Username should be start with Alpabetics")
 					return redirect('/')
